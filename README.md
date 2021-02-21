@@ -16,4 +16,4 @@ snRNA_epithelial_analysis.R
 -computation of differentials and malignancy continuum  
 
 snRNA_stromal_analysis.R  
--standard Seurat 3 (Stuart et al. 2019) workflow for dimensionality reduciton and clustering of stomal cells from all samples
+-standard Seurat 3 (Stuart et al. 2019) workflow for dimensionality reduction and clustering of stomal cells from all samples
