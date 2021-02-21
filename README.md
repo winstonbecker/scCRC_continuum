@@ -10,4 +10,4 @@ The RNA scripts are set up to take the seurat objects for each compartment as in
 The ArchR projects are much larger (~100 GB so harder to share, but files containing the cells in each compartment are included, which allows you to quickly subset the fragments files to create the ArchR projects.)
 
 Scripts:
-
+snRNA_epithelial_analysis.R
