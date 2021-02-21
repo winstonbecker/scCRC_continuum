@@ -9,6 +9,8 @@ The RNA scripts are set up to take the seurat objects for each compartment as in
 
 The ArchR projects are much larger (~100 GB) so are harder to share, but files containing the cells in each compartment are included, which allows you to quickly subset the fragments files to create the ArchR projects.
 
+The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://htan-portal-nextjs.now.sh/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset). 
+
 **Scripts:**  
 snRNA_epithelial_analysis.R  
 -LSI dimensionality reduction and clustering of normal epithelial cells  
