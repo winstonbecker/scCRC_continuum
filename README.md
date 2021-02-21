@@ -2,7 +2,7 @@
 
 Repository to host code produced for "Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al 2021.
 
-**Files:**  
+**Files/Data:**  
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
 
 The RNA scripts are set up to take the seurat objects for each compartment as input. Seurat objects can be found here: ADD LINK TO SEURAT OBJECTS. 
