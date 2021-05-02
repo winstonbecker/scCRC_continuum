@@ -12,10 +12,10 @@ The ArchR projects are much larger (~100 GB) so are harder to share, but files c
 The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://htan-portal-nextjs.now.sh/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset). 
 
 **Scripts:**
-scRNA_initial_clustering.R
--make seurat object will all cells
--run doublet finder on individual samples
--divide into three groups (immune, epithelial, and stromal) for downstream analysis
+scRNA_initial_clustering.R  
+-make seurat object will all cells  
+-run doublet finder on individual samples  
+-divide into three groups (immune, epithelial, and stromal) for downstream analysis  
 
 snRNA_epithelial_analysis.R  
 -LSI dimensionality reduction and clustering of normal epithelial cells  
