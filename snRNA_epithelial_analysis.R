@@ -362,7 +362,7 @@ if (3 %in% execute_steps){
 	dev.off()
 
     # Recluster with final nPCs
-    colon <- FindNeighbors(object = colon, reduction = reducName, dims = nPCs, force.recalc = TRUE)
+    colon <- FindNeighbors(object = colon, reduction = paste0("LSI_iter",i), dims = nPCs, force.recalc = TRUE)
     colon <- FindClusters(object = colon, resolution = 1.0)
 
     pdf(paste0("./UMAPclustering" , ".pdf"))
