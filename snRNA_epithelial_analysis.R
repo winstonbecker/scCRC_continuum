@@ -451,7 +451,7 @@ if (7 %in% execute_steps){
 		rawCounts <- GetAssayData(object = temp, slot = "counts")
 
 	    # project in the previously defined lsi dimensionality reduction and add to temp seurat project--assumes lsiOut is still around, save it and load it if its not
-	    lsiProjectionMat <- projectLSI(rawCounts,lsiOut[[reducName]], binarize = FALSE)
+	    lsiProjectionMat <- projectLSI(rawCounts,lsiOut[[paste0("LSI_iter",length(resolution))]], binarize = FALSE)
 	    temp[["LSI_project"]] <- CreateDimReducObject(embeddings = as.matrix(lsiProjectionMat), key = sprintf("LSI_project"), assay = "RNA")
 
 	    # project into umap and add to temp seurat project
@@ -479,7 +479,7 @@ if (7 %in% execute_steps){
 	    library(FNN)
 	    input_knn <- 25
 	    nPCs <- final_nPCs
-	    svdReference <- as.data.frame(lsiOut[[reducName]]$lsiMat)
+	    svdReference <- as.data.frame(lsiOut[[paste0("LSI_iter",length(resolution))]]$lsiMat)
 	    svdDisease <- as.data.frame(as.matrix(lsiProjectionMat))
 	    knnDisease <- get.knnx(
 	      data = svdReference[,nPCs],
