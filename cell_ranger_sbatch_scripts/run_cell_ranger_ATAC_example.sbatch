@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Example bash Script for Running Cell Ranger with pre-mRNA reference using slurm job scheduler 
+# Example bash Script for Running Cell Ranger ATAC using slurm job scheduler 
 #################
 # set a job name  
 #SBATCH --job-name=ATAC_CRC-1-8810
