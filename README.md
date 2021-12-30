@@ -40,6 +40,11 @@ scATAC_initial_clustering.R
 -initial clustering of all scATAC cells with ArchR (Granja et al. 2021)
 -note that some aspects of the analysis are non-determenistic (https://www.archrproject.com/bookdown/iterative-latent-semantic-indexing-lsi.html). We have provided lists of cells included in each category to help make steps of the analysis reproducible.
 
+scATAC_subset_immune.R
+-clustering and annotation of scATAC immune cells
+
+scATAC_subset_tcells.R
+-clustering and annotation of scATAC t-cells
 
 
 
