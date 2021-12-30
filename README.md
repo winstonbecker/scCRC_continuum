@@ -1,10 +1,8 @@
 # scCRC_continuum
 
-Repository to host code produced for "Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al 2021. The main text is available here (ADD LINK WHEN PUBLISHED) and the preprint is available here: https://www.biorxiv.org/content/10.1101/2021.03.24.436532v1.  
+Repository to host code produced for "Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al 2021. The peer-revieved article text is available at (ADD LINK WHEN PUBLISHED) and the preprint is available at https://www.biorxiv.org/content/10.1101/2021.03.24.436532v1.  
 
 ![image](https://user-images.githubusercontent.com/15204322/147711771-0a5e3292-095c-443a-a0ef-9d8bf7afb181.png)
-
-Repository to host code produced for "Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al 2021.
 
 **Files/Data:**  
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
