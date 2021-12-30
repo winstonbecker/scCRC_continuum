@@ -7,10 +7,10 @@ A metadata file is included here that contains primarily the sample specific inf
 
 The RNA scripts are set up to take the seurat objects for each compartment as input. 
 
-Seurat objects can be found here: ADD LINK TO SEURAT OBJECTS. This includes the following objects, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed. 
-epithelial_filtered.rds
-immune_filtered.rds
-stromal_filtered.rds
+Seurat objects can be found here: ADD LINK TO SEURAT OBJECTS. This includes the following objects, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed.  
+epithelial_filtered.rds  
+immune_filtered.rds  
+stromal_filtered.rds  
 
 The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://htan-portal-nextjs.now.sh/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset). 
 
