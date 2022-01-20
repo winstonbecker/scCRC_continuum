@@ -6,11 +6,11 @@ library(celldex)
 library(Seurat)
 
 # read in seurat object
-colon <- readRDS("./clustered_full_colon_proj_seurat.rds")
 analysis_parent_folder <- "./immune_normalize_and_scale/"
 setwd(analysis_parent_folder)
+colon <- readRDS("./clustered_full_colon_proj_seurat.rds")
 
-# set up reference
+# set up reference, and define cell types to use
 ref <- HumanPrimaryCellAtlasData()
 types_to_use <- c("DC","Epithelial_cells","B_cell","Neutrophils","T_cells","Monocyte",
 	"Endothelial_cells","Neurons","Macrophage","NK_cell",
@@ -20,5 +20,5 @@ ref <- ref[,(colData(ref)$label.main %in% types_to_use)]
 # Run singleR
 singler.pred <- SingleR(test = as.SingleCellExperiment(colon), ref = ref, labels = ref$label.fine)
 
-# Add to seurat object the you can plot
+# Add to seurat object, and then you cna plot the results if desired
 colon <- AddMetaData(colon, metadata = singler.pred$labels, col.name = "SingleR.labels")
