@@ -18,12 +18,10 @@ The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HT
 
 **Scripts:**
 
-*Preprocessing with cell ranger*
-
+*Preprocessing with cell ranger*  
 cell_ranger_sbatch_scripts contains run_cell_ranger_ATAC_example.sbatch and run_cell_ranger_RNA_example.sbatch, which are examples of how cell ranger was used to generate expression matricies and fragments files from fastqs. 
 
-*snRNA Analysis Scripts*
-
+*snRNA Analysis Scripts*  
 scRNA_initial_clustering.R  
 -make seurat object will all cells  
 -run doublet finder on individual samples  
@@ -40,8 +38,8 @@ snRNA_stromal_analysis.R
 snRNA_immune_analysis.R  
 -standard Seurat 3 (Stuart et al. 2019) workflow for dimensionality reduction and clustering of stomal cells from all samples
 
-*scATAC Analysis Scripts*
-Please see ArchR for additional details
+*scATAC Analysis Scripts*  
+ArchR is utilized for a significant portion of the scATAC analysis. You can find additional details on ArchR here (https://www.archrproject.com/).
 
 scATAC_initial_clustering.R  
 -initial clustering of all scATAC cells with ArchR (Granja et al. 2021)
