@@ -42,6 +42,8 @@ snRNA_immune_analysis.R
 
 *scATAC Analysis Scripts*
 
+Please see ArchR for additional details
+
 scATAC_initial_clustering.R  
 -initial clustering of all scATAC cells with ArchR (Granja et al. 2021)
 -note that some aspects of the analysis are non-determenistic (https://www.archrproject.com/bookdown/iterative-latent-semantic-indexing-lsi.html). We have provided lists of cells included in each category to help make steps of the analysis reproducible.
