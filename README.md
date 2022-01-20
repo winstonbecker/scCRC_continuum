@@ -4,7 +4,7 @@ Repository to host code produced for "Single-cell analyses reveal a continuum of
 
 ![image](https://user-images.githubusercontent.com/15204322/147711771-0a5e3292-095c-443a-a0ef-9d8bf7afb181.png)
 
-##Files/Data:## 
+## Files/Data: ## 
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
 
 The RNA scripts are set up to take the seurat objects for each compartment as input. 
@@ -16,12 +16,12 @@ stromal_filtered.rds
 
 The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://htan-portal-nextjs.now.sh/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset). 
 
-##Scripts:##
+## Scripts: ##
 
-####Preprocessing with cell ranger####  
+#### Preprocessing with cell ranger ####  
 cell_ranger_sbatch_scripts contains run_cell_ranger_ATAC_example.sbatch and run_cell_ranger_RNA_example.sbatch, which are examples of how cell ranger was used to generate expression matricies and fragments files from fastqs. 
 
-####snRNA Analysis Scripts####  
+#### snRNA Analysis Scripts ####  
 *scRNA_initial_clustering.R*  
 -make seurat object will all cells  
 -run doublet finder on individual samples  
@@ -38,7 +38,7 @@ cell_ranger_sbatch_scripts contains run_cell_ranger_ATAC_example.sbatch and run_
 snRNA_immune_analysis.R  
 -standard Seurat 3 (Stuart et al. 2019) workflow for dimensionality reduction and clustering of stomal cells from all samples
 
-####scATAC Analysis Scripts####  
+#### scATAC Analysis Scripts ####  
 ArchR is utilized for a significant portion of the scATAC analysis. You can find additional details on ArchR here (https://www.archrproject.com/).
 
 *scATAC_initial_clustering.R*  
@@ -51,7 +51,7 @@ ArchR is utilized for a significant portion of the scATAC analysis. You can find
 *scATAC_subset_tcells.R*  
 -clustering and annotation of scATAC t-cells
 
-####Methylation Analysis Scripts####
+#### Methylation Analysis Scripts ####
 
 
 **Questions/Comments:**
