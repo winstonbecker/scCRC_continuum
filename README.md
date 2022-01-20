@@ -41,7 +41,6 @@ snRNA_immune_analysis.R
 -standard Seurat 3 (Stuart et al. 2019) workflow for dimensionality reduction and clustering of stomal cells from all samples
 
 *scATAC Analysis Scripts*
-
 Please see ArchR for additional details
 
 scATAC_initial_clustering.R  
