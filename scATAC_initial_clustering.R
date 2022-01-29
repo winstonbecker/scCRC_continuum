@@ -33,6 +33,13 @@ addArchRThreads()
 # Which steps above you want to run
 execute_steps <- c(1,2,3,4,5,6)
 
+
+metadata <- read.table("./hubmap_htan_metadata_atac_and_rna_final.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
+
+pre_defined_doublets <- TRUE
+cells_to_include <- read.table("./cells_in_initial_clustering.txt")
+
+
 ################################################################################################################
 #..............................................................................................................#
 ################################################################################################################
@@ -350,8 +357,7 @@ if (2 in execute_steps){
 ################################################################################################################
 # # 3) Add metadata to project
 if (3 in execute_steps){
-  metadata <- read.table("./hubmap_htan_metadata_atac_and_rna_final.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
-
+  
   for (j in 2:dim(metadata)[2]){
     # initialize list
     cellsNamesToAdd <- c()
@@ -395,10 +401,12 @@ if (4 in execute_steps){
   )
   plotPDF(p2,p3, name = "QC-Sample-Statistics-TSS-Sample-Violin.pdf", ArchRProj = proj, addDOC = FALSE, width = 8, height = 6)
 
-  # For reproducibility, load previously defined set of cells after doublet removal
-  # proj <- filterDoublets(proj, filterRatio = 1.2)
-  cells_to_include <- read.table("./cells_in_initial_clustering.txt")
-  proj <- proj[cells_to_include$V1,]
+  # For reproducibility, can use previously defined set of cells after doublet removal
+  if (pre_defined_doublets) {
+    proj <- proj[cells_to_include$V1,]
+  } else {
+    proj <- filterDoublets(proj, filterRatio = 1.2)
+  }
 
   p2 <- plotGroups(
       ArchRProj = proj, 
