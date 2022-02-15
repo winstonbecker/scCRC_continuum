@@ -6,9 +6,9 @@ library(celldex)
 library(Seurat)
 
 # read in seurat object
-analysis_parent_folder <- "./immune_normalize_and_scale/"
+analysis_parent_folder <- "./immune_results/"
 setwd(analysis_parent_folder)
-colon <- readRDS("./clustered_full_colon_proj_seurat.rds")
+colon <- readRDS("./clustered_full_colon_immune_proj_seurat_post_doublet_filter.rds")
 
 # set up reference, and define cell types to use
 ref <- HumanPrimaryCellAtlasData()
