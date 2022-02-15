@@ -16,7 +16,6 @@ library(harmony)
 library(future)
 library(Matrix)
 set.seed(1)
-# source(path/tofile/here.R)
 
 ##############################################################################################################################
 # Analysis steps
@@ -32,7 +31,7 @@ execute_steps <- c(1,2,3,4,5,6,7)
 
 # Define variables
 sample_name <- "all_samples"
-analysis_parent_folder <- "/oak/stanford/groups/wjg/wbecker/other/scRNA/analysis/stromal_final/set1_11stromal_normalize_and_scale_repeat/"
+analysis_parent_folder <- "./stromal_analysis/"
 
 # Create directory
 if (!dir.exists(paste0(analysis_parent_folder))){
@@ -40,9 +39,7 @@ if (!dir.exists(paste0(analysis_parent_folder))){
 }
 setwd(analysis_parent_folder)
 
-colon <- readRDS("/oak/stanford/groups/wjg/wbecker/other/scRNA/analysis/all_cells/set1_11_final/colon_stromal_all_samples_initial.rds")
-#colon@meta.data$orig.ident[colon@meta.data$orig.ident == "A014-C-102"]<- "A015-C-102"
-#colon <- readRDS("/oak/stanford/groups/wjg/wbecker/other/scRNA/analysis/stromal_final/set1_11stromal_normalize_and_scale/diet_clustered_full_colon_proj_seurat.rds")
+colon <- readRDS("./all_cells/initial_clustering_stromal.rds")
 
 ###############################################################################################################################
 # Define Functions
@@ -80,13 +77,13 @@ plotUMAP <- function(colon){
 
 	pdf(paste0("./UMAP_disease_state.pdf"), width = 6.5, onefile=F)
 	print(DimPlot(colon, reduction = "umap", group.by = "DiseaseState",
-		cols = c("#D51F26", "#272E6A", "#208A42", "#89288F" ,"#F47D2B" ,"#FEE500" ,"#8A9FD1", "#C06CAB","#90D5E4", "#89C75F")) + theme_ArchR())#, cols = (ArchRPalettes$stallion))
+		cols = c("#D51F26", "#272E6A", "#208A42", "#89288F" ,"#F47D2B" ,"#FEE500" ,"#8A9FD1", "#C06CAB","#90D5E4", "#89C75F")) + theme_ArchR())
 	dev.off()
 }
 
 seurat_feature_plot <- function(sample_name, reduction, cell_type, markers){
 	p1 <- FeaturePlot(colon, features = markers, reduction = reduction, sort.cell = TRUE, combine = FALSE, pt.size = 5)
-	fix.sc <- scale_colour_gradientn(colours = ArchRPalettes$blueYellow)#wes_palette("Zissou1", 100, type = "continuous"))#paletteContinuous(set = "blueYellow", n = 256, reverse = FALSE))#rev(brewer.pal(n = 9, name = "YlGnBu")))
+	fix.sc <- scale_colour_gradientn(colours = ArchRPalettes$blueYellow)
 	if (length(p1)==1){
 		width <- 4
 		height <- 4
@@ -139,7 +136,7 @@ if (1 %in% execute_steps){
 ##############################################################################################################################
 #............................................................................................................................#
 ##############################################################################################################################
-# 2) Normalize and scale data, plot UMAP,find markers
+# 2) Normalize and scale data, plot UMAP, find markers
 if (2 %in% execute_steps){
 	colon <- normalize_and_dim_reduce(colon, sample_name)
 	plotUMAP(colon)
@@ -214,22 +211,21 @@ if (5 %in% execute_steps){
 ##############################################################################################################################
 # 6) Initial cluster identification
 if (6 %in% execute_steps){
-	# Going to use non-harmony version for clustering since there doesn't seem to be much difference
 	colon <- FindClusters(colon, resolution = 1.0)
 	new.cluster.ids <- c(
-		"Myofibroblasts 1",#0
-		"Myofibroblasts 1", #1
+		"Myofibroblasts/Smooth Muscle 1",#0
+		"Myofibroblasts/Smooth Muscle 1", #1
 		"Crypt Fibroblasts 1", #2
-		"Myofibroblasts 1", #3
+		"Myofibroblasts/Smooth Muscle 1", #3
 		"Villus Fibroblasts WNT5B+", #4
 		"Endothelial", #5
 		"Crypt Fibroblasts 3", #6
-		"Myofibroblasts 1", #7
-		"Myofibroblasts 1", #8
-		"Myofibroblasts 3", #9 GREM1+
+		"Myofibroblasts/Smooth Muscle 1", #7
+		"Myofibroblasts/Smooth Muscle 1", #8
+		"Myofibroblasts/Smooth Muscle 3", #9 GREM1+
 		"Crypt Fibroblasts 2", #10
 		"Crypt Fibroblasts 4", #11 RSPO3+
-		"Myofibroblasts 2", #12
+		"Myofibroblasts/Smooth Muscle 2", #12
 		"Cancer Associated Fibroblasts", #13
 		"Pericytes", #14
 		"Glia", #15
@@ -237,9 +233,9 @@ if (6 %in% execute_steps){
 		"Endothelial",#17 Post-capillary venules
 		"Endothelial", #18
 		"Crypt Fibroblasts 4",#19 RSPO3+
-		"Unknown", #20 #neurons? smooth muscle?
+		"Unknown", #20 #neurons
 		"Adipocytes", #21
-		"Myofibroblasts 1", #22
+		"Myofibroblasts/Smooth Muscle 1", #22
 		"Neurons")#23
 
 	identities <- as.character(colon@meta.data$seurat_clusters)
@@ -266,35 +262,35 @@ if (6 %in% execute_steps){
 # 7) Find markers
 if (7 %in% execute_steps){
 	new.cluster.ids <- c(
-			"Myofibroblasts 1",#0
-			"Myofibroblasts 1", #1
-			"Crypt Fibroblasts 1", #2
-			"Myofibroblasts 1", #3
-			"Villus Fibroblasts WNT5B+", #4
-			"Endothelial", #5
-			"Crypt Fibroblasts 3", #6
-			"Myofibroblasts 1", #7
-			"Myofibroblasts 1", #8
-			"Myofibroblasts GREM1+", #9
-			"Crypt Fibroblasts 2", #10
-			"Crypt Fibroblasts RSPO3+", #11
-			"Myofibroblasts 2", #12
-			"Cancer Associated Fibroblasts", #13
-			"Pericytes", #14
-			"Glia", #15
-			"Lymphatic endothelial cells", #16
-			"Endothelial",#17 Post-capillary venules
-			"Endothelial", #18
-			"Crypt Fibroblasts RSPO3+",#19
-			"Unknown", #20 #neurons? smooth muscle?
-			"Adipocytes", #21
-			"Myofibroblasts 1", #22
-			"Neurons")#23
+		"Myofibroblasts/Smooth Muscle 1", #0
+		"Myofibroblasts/Smooth Muscle 1", #1
+		"Crypt Fibroblasts 1", #2
+		"Myofibroblasts/Smooth Muscle 1", #3
+		"Villus Fibroblasts WNT5B+", #4
+		"Endothelial", #5
+		"Crypt Fibroblasts 3", #6
+		"Myofibroblasts/Smooth Muscle 1", #7
+		"Myofibroblasts/Smooth Muscle 1", #8
+		"Myofibroblasts/Smooth Muscle 3", #9 GREM1+
+		"Crypt Fibroblasts 2", #10
+		"Crypt Fibroblasts 4", #11 RSPO3+
+		"Myofibroblasts/Smooth Muscle 2", #12
+		"Cancer Associated Fibroblasts", #13
+		"Pericytes", #14
+		"Glia", #15
+		"Lymphatic Endothelial Cells", #16
+		"Endothelial",#17 Post-capillary venules
+		"Endothelial", #18
+		"Crypt Fibroblasts 4",#19 RSPO3+
+		"Unknown", #20 #neurons
+		"Adipocytes", #21
+		"Myofibroblasts/Smooth Muscle 1", #22
+		"Neurons")#23
 	names(new.cluster.ids) <- levels(colon)
 	colon <- RenameIdents(colon, new.cluster.ids)
 
 	# ID markers
-	colon.markers <- FindAllMarkers(colon, only.pos = TRUE, min.pct = 0.05, max.cells.per.ident = 250)
+	colon.markers <- FindAllMarkers(colon_named, only.pos = TRUE, min.pct = 0.05, max.cells.per.ident = 250, test.use = "MAST")
 	colon.markers.CAF <- colon.markers[colon.markers$cluster == "Cancer Associated Fibroblasts",]
 	colon.up <- colon.markers.CAF[colon.markers.CAF$avg_logFC>0,]
 }
