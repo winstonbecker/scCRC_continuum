@@ -3,7 +3,6 @@
 # in the malignant transformation of polyps to colorectal cancer."
 # WRB 2020-2021
 # Substantial portions of the LSI dimensionality reduction and projections were adapted or copied from Granja et al 2019
-# Script edited to work with final seurat object
 
 # Analysis steps
 # 1) Load epithelial project and subset
@@ -39,10 +38,10 @@ set.seed(1)
 execute_steps <- 1:10
 
 # folder to save the results
-analysis_parent_folder <- "./colon_snRNA_analysis_directory/"
+analysis_parent_folder <- "./epithelial_results/"
 
 # load seurat object containing all epithelial cells
-colon_full <- readRDS("./colon_epithelial_all_samples.rds")
+colon_full <- readRDS("./initial_clustering/colon_epithelial_all_samples.rds")
 
 # load metadata
 metadata <- read.table("./hubmap_htan_metadata_atac_and_rna_final.csv", header = TRUE, sep = ",", stringsAsFactors=FALSE)
@@ -568,7 +567,7 @@ if (8 %in% execute_steps){
 			current_sample <- sample_name_list[i]
 			message(paste0("Computing differential genes for ", current_sample))
 			# added use.test = "DESeq2" and got similar results
-			differential_test <- FindMarkers(colon_test_object, ident.1 = current_sample, ident.2 = background_sample, verbose = FALSE, min.pct = 0, logfc.threshold = 0, min.cells.feature = 0, max.cells.per.ident = 300)#, use.test = "DESeq2")
+      			differential_test <- FindMarkers(colon_test_object, ident.1 = current_sample, ident.2 = background_sample, verbose = FALSE, min.pct = 0, logfc.threshold = 0, min.cells.feature = 0, max.cells.per.ident = 300, test.use = "MAST")
 			colnames(differential_test) <- paste0(colnames(differential_test), current_sample)
 			if (i == 1){
 				colon_full_diff_test <- differential_test
