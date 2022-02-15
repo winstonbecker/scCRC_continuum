@@ -24,7 +24,8 @@ library(ggpubr)
 # 5) ID Cluster Markers and compare to published data
 # 6) Remove bad clusters and redo analysis
 # 7) Plot Markers
-# 9) Cluster identification and cell type fraction plots
+# 8) Cluster identification 
+# 9) Cell type fraction plots
 # 10) Module scores for IFN-gamma signaling
 
 # Set steps to run
@@ -35,7 +36,7 @@ colon <- readRDS("./colon_immune_all_samples_initial.rds") # this is the one wit
 
 # Define variables
 sample_name <- "all_samples" # used as label for saving plots
-analysis_parent_folder <- "./Post_review_immune_noramlize_and_scale_v2/"
+analysis_parent_folder <- "./immune_results/"
 setwd(analysis_parent_folder)
 
 ###############################################################################################################################
@@ -250,9 +251,8 @@ if (7 %in% execute_steps){
 ##############################################################################################################################
 #............................................................................................................................#
 ##############################################################################################################################
-# 9) Cluster identification and cell type fraction plots
-# overclustered and combined clusters with similar markers
-if (9 %in% execute_steps){
+# 8) Cluster identification - overclustered and combined clusters with similar markers
+if (8 %in% execute_steps){
 	# change back sample names if changed before
 	colon@meta.data$orig.ident[colon@meta.data$orig.ident == "A002-C-025-R0"]<- "A002-C-010-R0"
 	colon <- RenameCells(colon, new.names = gsub("A002-C-025-R0", "A002-C-010-R0", colnames(colon)))
@@ -310,19 +310,19 @@ if (9 %in% execute_steps){
 		)
 
 	pal <- c("#D51F26")
-    names(pal) <- "CD4+"
-    pal["CD8+"] <- "#89288F"
-    pal["DC"] <- "#F47D2B"
-    pal["GC"] <- "#8A9FD1"
-    pal["ILCs"] <- "#C06CAB"
-    pal["Macrophages"] <- "#D8A767"
-    pal["Mast"] <- "#89C75F"
-    pal["Memory B"] <- "#F37B7D"
-    pal["Naive B"] <- "#9983BD"
-    pal["NK"] <- "#D24B27"
-    pal["Plasma"] <- "#3BBCA8"
-    pal["Tregs"] <- "#6E4B9E"
-    pal["Naive T"] <- "#0C727C" 
+	names(pal) <- "CD4+"
+	pal["CD8+"] <- "#89288F"
+	pal["DC"] <- "#F47D2B"
+	pal["GC"] <- "#8A9FD1"
+	pal["ILCs"] <- "#C06CAB"
+	pal["Macrophages"] <- "#D8A767"
+	pal["Mast"] <- "#89C75F"
+	pal["Memory B"] <- "#F37B7D"
+	pal["Naive B"] <- "#9983BD"
+	pal["NK"] <- "#D24B27"
+	pal["Plasma"] <- "#3BBCA8"
+	pal["Tregs"] <- "#6E4B9E"
+	pal["Naive T"] <- "#0C727C" 
 
 	identities <- as.character(colon@meta.data$seurat_clusters)
 	for (i in 0:length(new.cluster.ids)){
@@ -333,60 +333,62 @@ if (9 %in% execute_steps){
 	DimPlot(colon, reduction = "umap", pt.size = 0.4, group.by = "CellType", cols = pal) + theme_ArchR()#, cols = (ArchRPalettes$stallion))
 	dev.off()
 
-    ##############################################################################################################################
+	##############################################################################################################################
 	##############################################################################################################################
 	# save
 	saveRDS(colon, "clustered_full_colon_immune_proj_seurat_post_doublet_filter.rds")
 	saveRDS(DietSeurat(colon), "diet_clustered_full_colon_immune_proj_seurat_post_doublet_filter.rds") 
-
-
-	##############################################################################################################################
-	##############################################################################################################################
+}
+				  
+##############################################################################################################################
+#............................................................................................................................#
+##############################################################################################################################
+# 9) Cell type fraction plots
+if (9 %in% execute_steps){
 	# cell type colored by disease state fraction plot
 	cM <- confusionMatrix(paste0(colon@meta.data$CellType), paste0(colon@meta.data$orig.ident))
-    cM <- data.frame(cM / Matrix::rowSums(cM))
-    samplenames <- c()
-    cellnames <- c()
-    values <- c()
-    diseaseStates <- c()
-    for (sample in colnames(cM)){
+	cM <- data.frame(cM / Matrix::rowSums(cM))
+	samplenames <- c()
+	cellnames <- c()
+	values <- c()
+	diseaseStates <- c()
+	for (sample in colnames(cM)){
 	    diseaseState <- unique(colon@meta.data[colon@meta.data$orig.ident == gsub("\\.", "-", sample),]$DiseaseState)
-        for (celltype in rownames(cM)){
-            samplenames <- c(samplenames, sample)
-            cellnames <- c(cellnames, celltype)
-            diseaseStates <- c(diseaseStates, diseaseState)
-            values <- c(values, cM[celltype,sample])
-        }
-    }
-    data <- data.frame(samplenames,cellnames,values, diseaseStates)
-    data <- data[order(sapply(data$diseaseStates, function(x) which(x == c("Normal", "Unaffected", "Polyp", "Adenocarcinoma")))), ]
+	for (celltype in rownames(cM)){
+	    samplenames <- c(samplenames, sample)
+	    cellnames <- c(cellnames, celltype)
+	    diseaseStates <- c(diseaseStates, diseaseState)
+	    values <- c(values, cM[celltype,sample])
+	}
+	}
+	data <- data.frame(samplenames,cellnames,values, diseaseStates)
+	data <- data[order(sapply(data$diseaseStates, function(x) which(x == c("Normal", "Unaffected", "Polyp", "Adenocarcinoma")))), ]
 
-    colOrder <-  c("CD4+","Tregs","CD8+","Naive T","NK","ILCs","DC","Macrophages","Mast","Memory B","Naive B","GC","Plasma")
+	colOrder <-  c("CD4+","Tregs","CD8+","Naive T","NK","ILCs","DC","Macrophages","Mast","Memory B","Naive B","GC","Plasma")
 
-    data <- data[order(sapply(data$cellnames, function(x) which(x == colOrder))), ]
-    data$cellnames <- factor(data$cellnames, levels = colOrder)
+	data <- data[order(sapply(data$cellnames, function(x) which(x == colOrder))), ]
+	data$cellnames <- factor(data$cellnames, levels = colOrder)
 
-    counts <- table(colon@meta.data$CellType)[colOrder]
-    axis_labels <- paste0(levels(data$cellnames), " (N = ", counts, ")")
+	counts <- table(colon@meta.data$CellType)[colOrder]
+	axis_labels <- paste0(levels(data$cellnames), " (N = ", counts, ")")
 
-    #data <- data[order(data$diseaseStates),]
-    data$samplenames <- factor(data$samplenames, levels = unique(data$samplenames))
-    pdf(paste0(paste("Sample-CellType-Bar-Fraction_Samplev2", sample_name, sep = "-"), ".pdf"), width = 8, height = 12, onefile=F)
-    p <- ggplot(data, aes(fill=samplenames, y=values, x=cellnames)) + 
-        geom_bar(position="stack", stat="identity") + theme_ArchR() + 
-      ylab("Fraction Cells") + scale_x_discrete(labels= axis_labels)+
-      xlab("Sample") + theme(axis.text.x = element_text(angle = 90)) + theme(axis.text=element_text(size=20,hjust=0.95,vjust=0.2),
-            axis.title=element_text(size=20)) +
-      scale_fill_manual("legend", values = c(
-                            colorRampPalette(c("#007849","#1E392A"))(8), 
-                            colorRampPalette(c("#008F95", "#0375B4","#062F4F"))(17),
-                            colorRampPalette(c("#94618E", "#6E3667","#813772"))(36),
-                            colorRampPalette(c("#E24E42", "#fe3401","#B82601"))(5)))
-    print(p)
-    dev.off()
+	#data <- data[order(data$diseaseStates),]
+	data$samplenames <- factor(data$samplenames, levels = unique(data$samplenames))
+	pdf(paste0(paste("Sample-CellType-Bar-Fraction_Samplev2", sample_name, sep = "-"), ".pdf"), width = 8, height = 12, onefile=F)
+	p <- ggplot(data, aes(fill=samplenames, y=values, x=cellnames)) + 
+	geom_bar(position="stack", stat="identity") + theme_ArchR() + 
+	ylab("Fraction Cells") + scale_x_discrete(labels= axis_labels)+
+	xlab("Sample") + theme(axis.text.x = element_text(angle = 90)) + theme(axis.text=element_text(size=20,hjust=0.95,vjust=0.2),
+	    axis.title=element_text(size=20)) +
+	scale_fill_manual("legend", values = c(
+			    colorRampPalette(c("#007849","#1E392A"))(8), 
+			    colorRampPalette(c("#008F95", "#0375B4","#062F4F"))(17),
+			    colorRampPalette(c("#94618E", "#6E3667","#813772"))(36),
+			    colorRampPalette(c("#E24E42", "#fe3401","#B82601"))(5)))
+	print(p)
+	dev.off()
 
-
-    ##############################################################################################################################
+	##############################################################################################################################
 	##############################################################################################################################
 	# Make celltype fraction plot with samples on x axis and stacked bars colored by cell type
 	cM <- confusionMatrix(paste0(colon@meta.data$CellType), paste0(colon@meta.data$orig.ident))
@@ -421,62 +423,62 @@ if (9 %in% execute_steps){
 	  scale_fill_manual("legend", values = c("#D51F26", "#89288F", "#F47D2B", "#8A9FD1", "#C06CAB", "#D8A767", "#89C75F", "#F37B7D", "#9983BD", "#0C727C", "#D24B27", "#3BBCA8", "#6E4B9E"))
 	dev.off()
 
-    ##############################################################################################################################
+	##############################################################################################################################
 	##############################################################################################################################
 	# Make celltype fraction plot with celltypes on x axis and stacked bars colored by sample/donor
 	cM <- confusionMatrix(paste0(colon@meta.data$CellType), paste0(colon@meta.data$orig.ident))
-    cM <- data.frame(cM / Matrix::rowSums(cM))
-    samplenames <- c()
-    cellnames <- c()
-    values <- c()
-    donors <- c()
-    for (sample in colnames(cM)){
-	    Donor <- unique(colon@meta.data[colon@meta.data$orig.ident == gsub("\\.", "-", sample),]$Donor)
-        for (celltype in rownames(cM)){
-            samplenames <- c(samplenames, sample)
-            cellnames <- c(cellnames, celltype)
-            donors <- c(donors, Donor)
-            values <- c(values, cM[celltype,sample])
-        }
-    }
-    data <- data.frame(samplenames,cellnames,values, donors)
-    data <- data[order(sapply(data$donors, function(x) which(x == c("B001", "B004", "EP", "A001", "A002", "A008", "A010", "A014", "A015", "A018", "CRC1", "CRC2", "CRC3")))), ]
+	cM <- data.frame(cM / Matrix::rowSums(cM))
+	samplenames <- c()
+	cellnames <- c()
+	values <- c()
+	donors <- c()
+	for (sample in colnames(cM)){
+		Donor <- unique(colon@meta.data[colon@meta.data$orig.ident == gsub("\\.", "-", sample),]$Donor)
+		for (celltype in rownames(cM)){
+		    samplenames <- c(samplenames, sample)
+		    cellnames <- c(cellnames, celltype)
+		    donors <- c(donors, Donor)
+		    values <- c(values, cM[celltype,sample])
+		}
+	}
+	data <- data.frame(samplenames,cellnames,values, donors)
+	data <- data[order(sapply(data$donors, function(x) which(x == c("B001", "B004", "F", "A001", "A002", "A008", "A010", "A014", "A015", "A018", "CRC1", "CRC2", "CRC3")))), ]
 
-    colOrder <-  c("CD4+","Tregs","CD8+","Naive T","NK","ILCs","DC","Macrophages","Mast","Memory B","Naive B","GC","Plasma")
+	colOrder <-  c("CD4+","Tregs","CD8+","Naive T","NK","ILCs","DC","Macrophages","Mast","Memory B","Naive B","GC","Plasma")
 
-    data <- data[order(sapply(data$cellnames, function(x) which(x == colOrder))), ]
-    data$cellnames <- factor(data$cellnames, levels = colOrder)
-    counts <- table(colon@meta.data$CellType)[colOrder]
-    axis_labels <- paste0(levels(data$cellnames), " (N = ", counts, ")")
-    
-    #data <- data[order(data$diseaseStates),]
-    data$samplenames <- factor(data$samplenames, levels = unique(data$samplenames))
-    pdf(paste0(paste("Sample-CellType-Bar-Fraction_Sample-ByDonor", sample_name, sep = "-"), ".pdf"), width = 8, height = 12, onefile=F)
-    p <- ggplot(data, aes(fill=samplenames, y=values, x=cellnames)) + 
-        geom_bar(position="stack", stat="identity") + theme_ArchR() + 
-      ylab("Fraction Cells") + scale_x_discrete(labels= axis_labels)+
-      xlab("Sample") + theme(axis.text.x = element_text(angle = 90)) + theme(axis.text=element_text(size=20,hjust=0.95,vjust=0.2),
-            axis.title=element_text(size=20)) +
-      scale_fill_manual("legend", values = c(
-                            colorRampPalette(c("#007849","#1E392A"))(4), 
-                            colorRampPalette(c("#008F95", "#0375B4","#062F4F"))(4),
-                            colorRampPalette(c("#94618E", "#6E3667","#813772"))(2),
-                            colorRampPalette(c("#E24E42", "#fe3401","#B82601"))(11),
-                            colorRampPalette(c("#fbd2b6", "#F47D2B","#913f08"))(13),
-                            colorRampPalette(c("#fff7b3", "#FEE500"))(2),
-                            colorRampPalette(c("#dae1f1", "#8A9FD1"))(2),
-                            colorRampPalette(c("#e0b8d6", "#C06CAB","#6b2e5c"))(10),
-                            colorRampPalette(c("#b1e7df", "#3BBCA8","#1f6157"))(13),
-                            colorRampPalette(c("#c1e8f0", "#90D5E4"))(2),
-                            colorRampPalette(c("#F37B7D"))(1),
-                            colorRampPalette(c("#9983BD"))(1),
-                            colorRampPalette(c("#D24B27"))(1)))
-    print(p)
-    dev.off()
+	data <- data[order(sapply(data$cellnames, function(x) which(x == colOrder))), ]
+	data$cellnames <- factor(data$cellnames, levels = colOrder)
+	counts <- table(colon@meta.data$CellType)[colOrder]
+	axis_labels <- paste0(levels(data$cellnames), " (N = ", counts, ")")
 
-    ##############################################################################################################################
+	#data <- data[order(data$diseaseStates),]
+	data$samplenames <- factor(data$samplenames, levels = unique(data$samplenames))
+	pdf(paste0(paste("Sample-CellType-Bar-Fraction_Sample-ByDonor", sample_name, sep = "-"), ".pdf"), width = 8, height = 12, onefile=F)
+	p <- ggplot(data, aes(fill=samplenames, y=values, x=cellnames)) + 
+	 geom_bar(position="stack", stat="identity") + theme_ArchR() + 
+	ylab("Fraction Cells") + scale_x_discrete(labels= axis_labels)+
+	xlab("Sample") + theme(axis.text.x = element_text(angle = 90)) + theme(axis.text=element_text(size=20,hjust=0.95,vjust=0.2),
+	    axis.title=element_text(size=20)) +
+	scale_fill_manual("legend", values = c(
+			    colorRampPalette(c("#007849","#1E392A"))(4), 
+			    colorRampPalette(c("#008F95", "#0375B4","#062F4F"))(4),
+			    colorRampPalette(c("#94618E", "#6E3667","#813772"))(2),
+			    colorRampPalette(c("#E24E42", "#fe3401","#B82601"))(11),
+			    colorRampPalette(c("#fbd2b6", "#F47D2B","#913f08"))(13),
+			    colorRampPalette(c("#fff7b3", "#FEE500"))(2),
+			    colorRampPalette(c("#dae1f1", "#8A9FD1"))(2),
+			    colorRampPalette(c("#e0b8d6", "#C06CAB","#6b2e5c"))(10),
+			    colorRampPalette(c("#b1e7df", "#3BBCA8","#1f6157"))(13),
+			    colorRampPalette(c("#c1e8f0", "#90D5E4"))(2),
+			    colorRampPalette(c("#F37B7D"))(1),
+			    colorRampPalette(c("#9983BD"))(1),
+			    colorRampPalette(c("#D24B27"))(1)))
+	print(p)
+	dev.off()
+
 	##############################################################################################################################
-    # Boxplots and Wilcoxin tests for differential abundance
+	##############################################################################################################################
+	# Boxplots and Wilcoxin tests for differential abundance
 	cM <- t(as.matrix(confusionMatrix(paste0(colon@meta.data$CellType), paste0(colon@meta.data$orig.ident))))
 	#combine and remove replicate samples
 	cM["A002-C-010",] <- cM["A002-C-010-R0",]+cM["A002-C-010",]
@@ -622,7 +624,6 @@ if (10 %in% execute_steps){
 	ctrl = 50,
 	name = 'ST_INTERFERON_GAMMA_PATHWAY'
 	)
-
 
 	pal <- c("#D51F26")
 	names(pal) <- "CD4+"
