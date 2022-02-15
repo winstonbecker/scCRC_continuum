@@ -25,8 +25,8 @@ execute_steps <- c(1,2,3,4,5,6,7)
 
 # Define variables
 sample_name <- "all_samples"
-individual_qc_and_dublet_plot_location <- "./analysis/doublet_analysis/"
-analysis_parent_folder <- "./analysis/"
+individual_qc_and_dublet_plot_location <- "./initial_clustering/doublet_analysis/"
+analysis_parent_folder <- "./initial_clustering/"
 setwd(analysis_parent_folder)
 path_to_metadata <- "./hubmap_htan_metadata_atac_and_rna_final.csv"
 
