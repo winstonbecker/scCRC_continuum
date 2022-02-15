@@ -39,7 +39,7 @@ if (!dir.exists(paste0(analysis_parent_folder))){
 }
 setwd(analysis_parent_folder)
 
-colon <- readRDS("./all_cells/initial_clustering_stromal.rds")
+colon <- readRDS("./initial_clustering/initial_clustering_stromal.rds")
 
 ###############################################################################################################################
 # Define Functions
