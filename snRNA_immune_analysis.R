@@ -32,7 +32,7 @@ library(ggpubr)
 execute_steps <- c(1,2,3,5,6,7,9,10)
 
 # Load previously defined seurat object that contains only the cells classified as immune cells
-colon <- readRDS("./colon_immune_all_samples_initial.rds") # this is the one with all the cells from the initial clustering post doublet finder doublet removal
+colon <- readRDS("./initial_clustering/colon_immune_all_samples_initial.rds") # this is the one with all the cells from the initial clustering post doublet finder doublet removal
 
 # Define variables
 sample_name <- "all_samples" # used as label for saving plots
