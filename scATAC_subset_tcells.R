@@ -1,20 +1,23 @@
-# script to run ArchR-copied from ArchR tutorial
+# Script to analysze scATAC t-cells from HTAN colon project with ArchR
+
 # The following modules should be loaded:
 # ml R/3.6.1
 # ml python
 # ml py-macs2/2.1.1_py27
 
+# Load libraries
 library(ArchR)
 library(Seurat)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
+# Define locations and project names
 project_directory <- "./projects/"
 clustered_parent_project_path <- "./all_samples_HuBMAP_HTAN_immune_cells/"
 subscript = "tcells"
 `%notin%` <- Negate(`%in%`)
-# RNA data
-seRNA3 <- readRDS("./other_datasets/t_cell_seurat_object.rds")
 
+# Load RNA data to label t-cells
+seRNA3 <- readRDS("./other_datasets/t_cell_seurat_object.rds") # this is the bcc t cell dataset from Yost et al.
 
 #Set/Create Working Directory to Folder
 setwd(project_directory)
@@ -25,12 +28,16 @@ addArchRGenome("hg38")
 #Set Threads to be used
 addArchRThreads()
 
-# Load previously defined archr project
+# Load previously defined archr project - should be the immune object, and will now subset only the T-cells
 proj_immune <- loadArchRProject(path = clustered_parent_project_path)
 
-##############################################################
-##############################################################
-# Define subset to explore
+# Define marker genes and motifs
+markerGenes  <- c("PDCD1", "TOX", "GZMB", "CTLA4")
+
+############################################################################################################################
+#..........................................................................................................................#
+############################################################################################################################
+# Subset seurat object
 idxSample <- BiocGenerics::which(getCellColData(proj_immune, "Clustersimmune") %in% paste0("C", c(8:15)))
 cellsSample <- proj_immune$cellNames[idxSample[["Clustersimmune"]]]
 
@@ -42,19 +49,10 @@ proj_tcells <- subsetArchRProject(
 
 proj_tcells <- loadArchRProject(path = "./all_samples_HuBMAP_HTAN_t_cells/")
 
-##############################################################
-##############################################################
-# Define marker genes and motifs
-
-markerGenes  <- c(
-    "PDCD1", "TOX", "GZMB", "CTLA4"
-  )
-
 ############################################################################################################################
 #..........................................................................................................................#
 ############################################################################################################################
-# LSI Projection and Clustering
-
+# LSI Projection, UMAP Reduction, and Clustering
 proj_tcells <- addIterativeLSI(
     ArchRProj = proj_tcells,
     useMatrix = "TileMatrix", 
@@ -69,7 +67,6 @@ proj_tcells <- addIterativeLSI(
     sampleCellsPre = NULL,
     dimsToUse = 1:30, force = TRUE
 )
-
 proj_tcells <- addClusters(
     input = proj_tcells,
     reducedDims = paste("IterativeLSI", subscript, sep = ""),
@@ -77,7 +74,6 @@ proj_tcells <- addClusters(
     name = paste("Clusters", subscript, sep = ""),
     resolution = 2.5, force=TRUE, nOutlier = 50, seed = 1
 )
-#2.5
 proj_tcells <- addUMAP(
     ArchRProj = proj_tcells, 
     reducedDims = paste("IterativeLSI", subscript, sep = ""), 
@@ -86,8 +82,6 @@ proj_tcells <- addUMAP(
     minDist = 0.5, 
     metric = "cosine", force=TRUE
 )
-
-
 p1 <- plotEmbedding(ArchRProj = proj_tcells, colorBy = "cellColData", name = "Sample", embedding = paste("UMAP", subscript, sep = ""))
 p2 <- plotEmbedding(ArchRProj = proj_tcells, colorBy = "cellColData", name = paste("Clusters", subscript, sep = ""), embedding = paste("UMAP", subscript, sep = ""))
 plotPDF(p1,p2, name = paste(paste("Plot-UMAP-Sample-Clusters", subscript, sep = "-"), ".pdf", sep = ""), ArchRProj = proj_tcells, addDOC = FALSE, width = 5, height = 5)
@@ -96,8 +90,7 @@ plotPDF(p1,p2, name = paste(paste("Plot-UMAP-Sample-Clusters", subscript, sep = 
 ############################################################################################################################
 #..........................................................................................................................#
 ############################################################################################################################
-# Gene scores
-
+# Plot gene scores
 proj_tcells <- addImputeWeights(proj_tcells, reducedDims = paste("IterativeLSI", subscript, sep = ""), k=9, sampleCells = floor(nCells(proj_tcells)))
 
 p <- plotEmbedding(
@@ -110,8 +103,8 @@ p <- plotEmbedding(
 plotPDF(plotList = p, 
     name = paste(paste("Plot-UMAP-Marker-Genes-W-Imputation", subscript, sep = "-"), ".pdf", sep = ""), 
     ArchRProj = proj_tcells, 
-    addDOC = FALSE, width = 5, height = 5)
-
+    addDOC = FALSE, width = 5, height = 5
+)
 markersGS <- getMarkerFeatures(
     ArchRProj = proj_tcells, 
     useMatrix = "GeneScoreMatrix", 
@@ -189,7 +182,6 @@ clusterCellTypes <- c("ILCs" #1
     ,"CD8+" #8
     ,"CD8+") #9
 
-
 for (i in 1:length(clusterNames)){
     idxSample <- BiocGenerics::which(getCellColData(proj_tcells, paste("Clusters", subscript, sep = "")) %in% c(clusterNames[i]))
     cellsSample <- proj_tcells$cellNames[idxSample[[paste("Clusters", subscript, sep = "")]]]
@@ -198,7 +190,6 @@ for (i in 1:length(clusterNames)){
 }
 
 write.table(DataFrame(cellsNamesToAdd, clusterNamesToAdd), paste0("tCellAnnotations", subscript, '.tsv'), sep = '\t')
-
 proj_tcells <- addCellColData(ArchRProj = proj_tcells, data = paste0(clusterNamesToAdd), cells = paste0(cellsNamesToAdd), name = "CellType", force = TRUE)
 
 p6 <- plotEmbedding(ArchRProj = proj_tcells, colorBy = "cellColData", name = "CellType", embedding = paste("UMAP", subscript, sep = ""))
@@ -209,11 +200,11 @@ saveArchRProject(ArchRProj = proj_tcells, load = FALSE, overwrite = FALSE)
 ############################################################################################################################
 #..........................................................................................................................#
 ############################################################################################################################
-#Create Group Coverage Files that can be used for downstream analysis (~5-10 minutes)
+#Create Group Coverage Files that can be used for downstream analysis
 proj_tcells <- addGroupCoverages(ArchRProj = proj_tcells, groupBy = "CellType", force = TRUE)
-pathToMacs2 <- findMacs2()
 
-#Call Reproducible Peaks w/ Macs2 (~5-10 minutes)
+#Call Reproducible Peaks w/ Macs2
+pathToMacs2 <- findMacs2()
 proj_tcells <- addReproduciblePeakSet(
     ArchRProj = proj_tcells, groupBy = "CellType", force = TRUE, 
     pathToMacs2 = pathToMacs2
@@ -222,17 +213,13 @@ proj_tcells <- addReproduciblePeakSet(
 #Add Peak Matrix
 proj_tcells <- addPeakMatrix(ArchRProj = proj_tcells, force = TRUE)
 
+#Save updated project
 saveArchRProject(ArchRProj = proj_tcells, load = FALSE, overwrite = FALSE)
 
-#To access motif need to specify deviations,z : motif_name
-#Try getFeatures with MotifMatrix to see available names
-motifs <- c("TBX21", "PAX5", # Bcells
-    "BATF3", #DC1
-    "GATA2", "MITF", #M.Mast
-    "BATF")
-
-##############################################################
-##############################################################
+############################################################################################################################
+#..........................................................................................................................#
+############################################################################################################################
+#Add Deviation Matrix
 proj_tcells <- addBgdPeaks(proj_tcells)
 proj_tcells <- addDeviationsMatrix(
   ArchRProj = proj_tcells, 
@@ -240,28 +227,10 @@ proj_tcells <- addDeviationsMatrix(
   force = TRUE
 )
 
-saveArchRProject(ArchRProj = proj_tcells, load = FALSE, overwrite = FALSE)
-
-motifs <- c("TBX21", "PAX5", # Bcells
-    "BATF", #Tregs
-    "BATF3", #DC1
-    "SPI1")
-
-motifPositions <- getPositions(proj_tcells)
-markerMotifs <- unlist(lapply(motifs, function(x) grep(x, names(motifPositions), value = TRUE)))
-
-motifs <- c("TBX21", "PAX5", # Bcells
-    "BATF", #Tregs
-    "BATF3", #DC1
-    "SPI1", #M.Monocytes
-    "GATA2", "MITF", #M.Mast
-    "SOX8", "SPIB", #M cells
-    "NCOA4" #CD69-Mast
-    )
+#Plot some motif deviations
+motifs <- c("NR4A2")
 variable_motifs <- c("SPI1_322", "TCF4_97", "ID3_38", "MESP2_94", "ESP1_69", "BCL11A_194")
 t_exhausted_motifs <- c("NFKB2", "NFKB1", "MAF", "BATF", "IRF4", "NFATC1")
-
-motifs <- c("NR4A2")
 
 markerMotifs <- getFeatures(proj_tcells, select = paste(motifs, collapse="|"), useMatrix = "MotifMatrix")
 markervariable_motifs <- getFeatures(proj_tcells, select = paste(variable_motifs, collapse="|"), useMatrix = "MotifMatrix")
@@ -276,6 +245,9 @@ plotPDF(p, name = paste0("UMAP-Groups-marker-variable_motifs-MotifDeviations-w-I
 p <- plotEmbedding(ArchRProj = proj_tcells, colorBy = "MotifMatrix", name = sort(markert_exhausted_motifs), 
     embedding = paste("UMAP", subscript, sep = ""),imputeWeights = getImputeWeights(proj_tcells))
 plotPDF(p, name = paste0("UMAP-Groups-marker-t_exhausted_motifs-MotifDeviations-w-Imputation-", subscript, ".pdf"), width = 5, height = 5,  ArchRProj = proj_tcells, addDOC = FALSE)
+
+#Save updated project
+saveArchRProject(ArchRProj = proj_tcells, load = FALSE, overwrite = FALSE)
 
 
 
