@@ -7,8 +7,6 @@ Repository to host code produced for "Single-cell analyses reveal a continuum of
 ## Files/Data: ## 
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
 
-The RNA scripts are set up to take the seurat objects for each compartment as input. 
-
 Seurat objects can be found here: https://drive.google.com/drive/folders/12j9ufV1L0uWbUlab-VoXRznDLKDO7PQ_?usp=sharing. This includes the following objects, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed. (We may change the location of these files in the future if we find a better place to host them, but will update this page with the location)  
 epithelial_filtered.rds  
 immune_filtered.rds  
@@ -58,6 +56,9 @@ ArchR is utilized for a significant portion of the scATAC analysis. You can find
 
 *scATAC_project_diseased_cells.R*  
 -script for projecting scATAC cells into normal reference  
+
+*scATAC_subset_epithelial.R*  
+-script for calling peaks, computing malignancy continuum, and computing differentials for all scATAC epithelial cells
 
 #### WGS Analysis Scripts ####  
 -scripts are in the WGS folder. Mutect2_commandLineDirections.sh has the command line entries for running the 2 other scripts.  
