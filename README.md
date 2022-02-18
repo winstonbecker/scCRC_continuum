@@ -12,7 +12,7 @@ epithelial_filtered.rds
 immune_filtered.rds  
 stromal_filtered.rds  
 
-The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://htan-portal-nextjs.now.sh/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset).  
+The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://data.humantumoratlas.org/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal (https://portal.hubmapconsortium.org/) under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset).  
 
 A metadata file is included in this repository that contains how we named the samples in the ATAC and RNA projects and the corresponding metadata: hubmap_htan_metadata_atac_and_rna_final.csv.  
 
