@@ -53,10 +53,10 @@ ArchR is utilized for a significant portion of the scATAC analysis. You can find
 *scATAC_subset_tcells.R*  
 -clustering and annotation of scATAC t-cells
 
-*scATAC_construct_epithelial_reference.R*
+*scATAC_construct_epithelial_reference.R*  
 -clustering and annotation of normal reference 
 
-*scATAC_project_diseased_cells.R*
+*scATAC_project_diseased_cells.R*  
 -script for projecting scATAC cells into normal reference  
 
 #### WGS Analysis Scripts ####  
