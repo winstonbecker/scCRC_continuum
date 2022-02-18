@@ -1,14 +1,18 @@
+# Script to analysze scATAC immune cells from HTAN colon project with ArchR
+
+# load libraries
 library(ArchR)
 library(Seurat)
 library(BSgenome.Hsapiens.UCSC.hg38)
 
-project_directory <- "/oak/stanford/groups/wjg/wbecker/other/scATAC/reproducibility_check/projects/"
+# Define directories
+project_directory <- "./projects/"
 clustered_parent_project_path <- "./all_samples_HuBMAP_HTAN/"
 subscript = "immune"
 `%notin%` <- Negate(`%in%`)
-# RNA data
-seRNA3 <- readRDS("/oak/stanford/groups/wjg/wbecker/other/scRNA/analysis/immune_final/immune_normalize_and_scale/diet_clustered_full_colon_proj_seurat.rds")
 
+# Load RNA data
+seRNA3 <- readRDS("immune_project_seurat.rds")
 
 #Set/Create Working Directory to Folder
 setwd(project_directory)
@@ -22,7 +26,12 @@ addArchRThreads()
 # Load previously defined archr project
 proj <- loadArchRProject(path = clustered_parent_project_path)
 
-##############################################################
+# Define marker genes
+markerGenes  <- c("PAX5", "CD3D", "CTLA4","TOX")
+
+############################################################################################################################
+#..........................................................................................................................#
+############################################################################################################################
 # Define subset to explore
 idxSample <- BiocGenerics::which(getCellColData(proj, "Clusters") %in% paste0("C", 31:35))
 cellsSample <- proj$cellNames[idxSample[["Clusters"]]]
@@ -34,14 +43,6 @@ proj_immune <- subsetArchRProject(
 )
 
 saveArchRProject(ArchRProj = proj_immune, outputDirectory = "all_samples_HuBMAP_HTAN_immune_cells", load = FALSE, overwrite = FALSE)
-
-
-##############################################################
-# Define marker genes and motifs
-
-markerGenes  <- c(
-    "PAX5", "CD3D", "CTLA4","TOX"
-  )
 
 ############################################################################################################################
 #..........................................................................................................................#
@@ -61,7 +62,6 @@ proj_immune <- addIterativeLSI(
     sampleCellsPre = NULL,
     dimsToUse = 1:30, force = TRUE
 )
-
 proj_immune <- addClusters(
     input = proj_immune,
     reducedDims = paste("IterativeLSI", subscript, sep = ""),
@@ -69,7 +69,6 @@ proj_immune <- addClusters(
     name = paste("Clusters", subscript, sep = ""),
     resolution = 1.7, force=TRUE, nOutlier = 50, seed = 1
 )
-
 proj_immune <- addUMAP(
     ArchRProj = proj_immune, 
     reducedDims = paste("IterativeLSI", subscript, sep = ""), 
@@ -78,17 +77,14 @@ proj_immune <- addUMAP(
     minDist = 0.5, 
     metric = "cosine", force=TRUE
 )
-
 p1 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = "Sample", embedding = paste("UMAP", subscript, sep = ""))
 p2 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = paste("Clusters", subscript, sep = ""), embedding = paste("UMAP", subscript, sep = ""))
 plotPDF(p1,p2, name = paste(paste("Plot-UMAP-Sample-Clusters", subscript, sep = "-"), ".pdf", sep = ""), ArchRProj = proj_immune, addDOC = FALSE, width = 5, height = 5)
 
-
-# Remove 3, 5, and 8--downstream analysis shows that these are likely doublets/not clearly defined clusters
+# Remove 3, 5, and 8--likely doublets/not clearly defined clusters
 idxSample <- BiocGenerics::which(getCellColData(proj_immune, "Clustersimmune") %notin% paste0("C", c(3,5,8)))
 cellsSample <- proj_immune$cellNames[idxSample[["Clustersimmune"]]]
 proj_immune <- proj_immune[cellsSample, ]
-
 
 proj_immune <- addIterativeLSI(
     ArchRProj = proj_immune,
@@ -121,7 +117,6 @@ proj_immune <- addUMAP(
     minDist = 0.5, 
     metric = "cosine", force=TRUE
 )
-
 
 p1 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = "Sample", embedding = paste("UMAP", subscript, sep = ""))
 p2 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = paste("Clusters", subscript, sep = ""), embedding = paste("UMAP", subscript, sep = ""))
