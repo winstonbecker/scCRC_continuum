@@ -7,10 +7,7 @@ Repository to host code produced for "Single-cell analyses reveal a continuum of
 ## Files/Data: ## 
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
 
-Seurat objects can be found here: https://drive.google.com/drive/folders/12j9ufV1L0uWbUlab-VoXRznDLKDO7PQ_?usp=sharing. This includes the following objects, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed. (We may change the location of these files in the future if we find a better place to host them, but will update this page with the location)  
-epithelial_filtered.rds  
-immune_filtered.rds  
-stromal_filtered.rds  
+Seurat objects can be found here: https://drive.google.com/drive/folders/12j9ufV1L0uWbUlab-VoXRznDLKDO7PQ_?usp=sharing. This includes the objects for the immune, stromal, and epithelail compartments, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed. (We may change the location of these files in the future if we find a better place to host them, but will update this page with the location.)  
 
 The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://data.humantumoratlas.org/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal (https://portal.hubmapconsortium.org/) under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset).  
 
