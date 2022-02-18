@@ -59,6 +59,9 @@ ArchR is utilized for a significant portion of the scATAC analysis. You can find
 *scATAC_project_diseased_cells.R*
 -script for projecting scATAC cells into normal reference  
 
+#### WGS Analysis Scripts ####  
+-scripts are in the WGS folder. Mutect2_commandLineDirections.sh has the command line entries for running the 2 other scripts.  
+
 **Questions/Comments:**
 
 For comments/questions, please either add a GitHub issue or email wbecker@stanford.edu.
