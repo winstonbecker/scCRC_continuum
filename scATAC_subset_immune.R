@@ -122,7 +122,6 @@ p1 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = "Sa
 p2 <- plotEmbedding(ArchRProj = proj_immune, colorBy = "cellColData", name = paste("Clusters", subscript, sep = ""), embedding = paste("UMAP", subscript, sep = ""))
 plotPDF(p1,p2, name = paste(paste("Plot-UMAP-Sample-Clusters", subscript, sep = "-"), ".pdf", sep = ""), ArchRProj = proj_immune, addDOC = FALSE, width = 5, height = 5)
 
-
 ############################################################################################################################
 #..........................................................................................................................#
 ############################################################################################################################
@@ -189,7 +188,6 @@ pal["CD8+"] <- "#89288F"
 pal["DC"] <- "#F47D2B"
 #pal["Exhausted T cells"] <- "#FEE500"
 pal["GC"] <- "#8A9FD1"
-#pal["Inflammatory Fibroblasts"] <- "#C06CAB"
 pal["ILCs"] <- "#C06CAB"
 pal["Macrophages"] <- "#D8A767"
 pal["Mast"] <- "#89C75F"
@@ -207,7 +205,6 @@ p1 <- plotEmbedding(
     pal = pal, embedding = paste0("UMAP", subscript)
 )
 plotPDF(p1, name = "Plot-UMAP-RNA-IntegrationLSI_OurData.pdf", ArchRProj = proj_immune, addDOC = FALSE, width = 5, height = 5)
-
 
 ############################################################################################################################
 #..........................................................................................................................#
@@ -233,7 +230,7 @@ for (i in 1:length(clusterNames)){
 write.table(DataFrame(cellsNamesToAdd, clusterNamesToAdd), paste0("Bcell_Myeloid_CellAnnotations", subscript, '.tsv'), sep = '\t')
 
 # Add in t cell annotations if done seperately
-tcells <- read.table("/oak/stanford/groups/wjg/wbecker/other/scATAC/HuBMAP_HTAN_ENCODE_Only/archr_all_samples_final/cell_type_annotations/tCellAnnotationstcells.tsv", sep = '\t', stringsAsFactors = FALSE)
+tcells <- read.table("./cell_type_annotations/tCellAnnotationstcells.tsv", sep = '\t', stringsAsFactors = FALSE)
 cellsNamesToAdd <- append(cellsNamesToAdd, tcells$cellsNamesToAdd)
 clusterNamesToAdd <- append(clusterNamesToAdd, tcells$clusterNamesToAdd)
 write.table(DataFrame(cellsNamesToAdd, clusterNamesToAdd), paste0("ImmuneCellAnnotations", subscript, '.tsv'), sep = '\t')
