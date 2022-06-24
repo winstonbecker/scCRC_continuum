@@ -1,6 +1,6 @@
 # scCRC_continuum
 
-Repository to host code produced for "Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al 2021. The peer-revieved article is available at (ADD LINK WHEN PUBLISHED) and the preprint is available at https://www.biorxiv.org/content/10.1101/2021.03.24.436532v1.  
+Repository to host code produced for ["Single-cell analyses reveal a continuum of cell state and composition changes in the malignant transformation of polyps to colorectal cancer" by Becker*, Nevins*, et al. Nature Genetics. 2021.](https://www.nature.com/articles/s41588-022-01088-x)  
 
 ![image](https://user-images.githubusercontent.com/15204322/147711771-0a5e3292-095c-443a-a0ef-9d8bf7afb181.png)
 
@@ -8,6 +8,8 @@ Repository to host code produced for "Single-cell analyses reveal a continuum of
 A metadata file is included here that contains primarily the sample specific information included in the supplemental tables as well as some grouping used for calling differential genes/peaks.
 
 Seurat objects can be found here: https://drive.google.com/drive/folders/12j9ufV1L0uWbUlab-VoXRznDLKDO7PQ_?usp=sharing. This includes the objects for the immune, stromal, and epithelail compartments, which contain annotated cells from the three compartments with likely doublet and low quality clusters removed. (We may change the location of these files in the future if we find a better place to host them, but will update this page with the location.)  
+
+Files containing the list of cells included after filtering and the corresponding cell types can be found here: https://drive.google.com/drive/folders/1Kl3SSbQyYQWIzl1ZW_9AfkFJStr7sY8A?usp=sharing.  
 
 The raw data for unaffacted, polyp, and CRC samples will be hosted on the the HTAN data portal (https://data.humantumoratlas.org/) under the PRE-CANCER ATLAS: FAMILIAL ADENOMATOUS POLYPOSIS project. The raw data for normal colon samples will be hosted on the HuBMAP data portal (https://portal.hubmapconsortium.org/) under the Stanford TMC (https://portal.hubmapconsortium.org/search?group_name[0]=Stanford%20TMC&entity_type[0]=Dataset).  
 
